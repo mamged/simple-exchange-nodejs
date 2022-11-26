@@ -25,7 +25,6 @@ service.listen(port)
 
 setInterval(function() {
     link.announce('rpc_test', service.port, {});
-    console.log('service.port', service.port);
 }, 1000)
 
 service.on('request', (rid, key, payload, handler) => {
