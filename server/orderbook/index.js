@@ -82,7 +82,7 @@ function consumeBuyOrder(order, startingOrderRow = 0) {
 function getOrderBook() {
     return {
         buyOrders: buyOrders.entries(),
-        sellOrders: buyOrders.entries(),
+        sellOrders: sellOrders.entries(),
     }
 }
 module.exports = {
