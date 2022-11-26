@@ -30,7 +30,6 @@ setInterval(function() {
 service.on('request', (rid, key, payload, handler) => {
     console.log(payload) //  { msg: 'hello' }
     if (payload.transationType === 'BUY') {
-        consumeBuyOrder(payload.transactionData)
-    } else consumeSellOrder(payload.transactionData)
-    handler.reply(null, { orderbook: getOrderBook() })
+        handler.reply(null, consumeBuyOrder(payload.transactionData));
+    } else handler.reply(null, consumeSellOrder(payload.transactionData));
 })

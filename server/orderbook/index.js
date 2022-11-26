@@ -50,12 +50,13 @@ function consumeSellOrder(order) {
             remainingOrderQuantity > 0 && consumeSellOrder({...order, quantity: remainingOrderQuantity });
         }
     } else registerSellOrder(order);
+    return getOrderBook();
 }
 
 function consumeBuyOrder(order, startingOrderRow = 0) {
     if (startingOrderRow >= sellOrdersKeysOrdered.length) {
         registerBuyOrder(order);
-        return;
+        return getOrderBook();
     }
     if (sellOrdersKeysOrdered[startingOrderRow] <= order.price) {
         if (!sellOrders.get(sellOrdersKeysOrdered[startingOrderRow])) debugger
@@ -77,12 +78,14 @@ function consumeBuyOrder(order, startingOrderRow = 0) {
         } else
             registerBuyOrder(order);
     }
+    const orderbook = getOrderBook();
+    return getOrderBook();
 }
 
 function getOrderBook() {
     return {
-        buyOrders: buyOrders.entries(),
-        sellOrders: sellOrders.entries(),
+        buyOrders: Array.from(buyOrders),
+        sellOrders: Array.from(sellOrders),
     }
 }
 module.exports = {
