@@ -11,7 +11,13 @@ link.start()
 const peer = new PeerRPCClient(link, {})
 peer.init()
 
-peer.request('rpc_test', { msg: 'hello' }, { timeout: 10000 }, (err, data) => {
+peer.request('rpc_test', {
+    transationType: 'BUY',
+    transactionData: {
+        price: 100,
+        quantity: 12
+    },
+}, { timeout: 10000 }, (err, data) => {
     if (err) {
         console.error(err)
         process.exit(-1)
