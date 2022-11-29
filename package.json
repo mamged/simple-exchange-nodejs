@@ -1,20 +1,55 @@
 {
-  "name": "simple-exchange-nodejs",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github-mamged:mAmged/simple-exchange-nodejs.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "grenache-nodejs-http": "^0.7.12",
-    "grenache-nodejs-link": "^0.7.12"
-  }
+    "name": "orderbooks",
+    "version": "1.0.0",
+    "description": "orderbook",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib/*",
+        "index.js"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "clean": "rimraf lib dist",
+        "build": "tsc",
+        "build:clean": "npm run clean && npm run build",
+        "build:watch": "npm run clean && tsc --watch",
+        "prepublishOnly": "npm run build:clean"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mAmged/simple-exchange-nodejs.git"
+    },
+    "keywords": [
+        "orderbook",
+        "orderbooks",
+        "order",
+        "book",
+        "crypto",
+        "trading",
+        "bybit",
+        "binance",
+        "bitmex",
+        "node"
+    ],
+    "devDependencies": {
+        "@babel/core": "^7.14.5",
+        "@babel/preset-env": "^7.14.5",
+        "@babel/preset-typescript": "^7.14.5",
+        "@types/node": "^15.12.4",
+        "@typescript-eslint/eslint-plugin": "^4.27.0",
+        "@typescript-eslint/parser": "^4.26.0",
+        "eslint": "^7.32.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "prettier": "^2.4.1",
+        "ts-node": "^10.8.1",
+        "typescript": "^4.7.4"
+    },
+    "author": "Tiago Siebler",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/mAmged/simple-exchange-nodejs/issues"
+    },
+    "homepage": "https://github.com/mAmged/simple-exchange-nodejs#readme"
 }
