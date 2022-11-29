@@ -1,48 +1,63 @@
 import { Order, OrderTypes } from './Order';
-import OrderBook, { OrderBookOptions } from './OrderBook';
-import { OrderBookLevelState } from './OrderBookLevel';
 
 type Book = Map<number, Order[]>;
+const buyOrderbook: Book = new Map<number, Order[]>();
+const sellOrderbook: Book = new Map<number, Order[]>();
 /**
  * Store for multi-symbol orderbooks, grouped into one book (OrderBook) per symbol
  * @class OrderBooksStore
  */
 export default class OrderBooksStore {
   book: Book;
-  sortedPriceSlots: number[];
-
-  constructor() {
-    this.book = new Map();
+  sellbook: Book;
+  buybook: Book;
+  orderbookType: OrderTypes;
+  constructor(orderbookType: OrderTypes) {
+    this.orderbookType = orderbookType;
+    // if(orderbookType == OrderTypes.BUY)
+    this.book = new Map<number, Order[]>();
+    this.buybook = new Map<number, Order[]>();
+    this.sellbook = new Map<number, Order[]>();
+    // else
+    //   this.book = sellOrderbook;
   }
 
   /**
    * @param {string} symbol
    * @returns {OrderBook} created for symbol if not already tracked
    */
-  getBook(): [number, Order[]][] {
-    return Array.from(this.book);
+  getBook(): { buyOrderBook: [number, Order[]][], sellOrderBook: [number, Order[]][] } {
+    return {
+      buyOrderBook: Array.from(this.buybook),
+      sellOrderBook: Array.from(this.sellbook),
+    };
   }
   addNewOrder(order: Order) {
-    if (this.isPriceExisting(order.price)) {
+    if (this.isPriceSlotExisting(order)) {
       this.addOrderToExistingPriceSlot(order)
     }
     else this.addNewOrderSlot(order);
   }
   addNewOrderSlot(order: Order) {
-    this.book.set(order.price, [order]);
-    this.updatePriceSlotsOrder();
+    this.ordeerbookDB(order.orderType).set(order.price, [order]);
+  }
+  ordeerbookDB(orderType: OrderTypes): Book {
+    if (orderType === OrderTypes.BUY)
+      return this.buybook;
+    return this.sellbook;
   }
   addOrderToExistingPriceSlot(order: Order) {
-    const priceSlot = this.book.get(order.price);
+    const orderBook = this.ordeerbookDB(order.orderType);
+    const priceSlot = orderBook.get(order.price);
     if (priceSlot) {
       priceSlot.push(order);
-      this.book.set(order.price, priceSlot);
+      orderBook.set(order.price, priceSlot);
     }
   }
-  isPriceExisting(price: number): boolean {
-    return this.book.has(price);
+  isPriceSlotExisting(order: Order): boolean {
+    return this.ordeerbookDB(order.orderType).has(order.price);
   }
-  consumePriceSlot(order, priceSlot) {
+  consumePriceSlot(order: Order, priceSlot: Order[]) {
     const remainingPriceSlot = priceSlot?.reduce((all: Order[], current: Order) => {
       //order fullfilled
       if (order.amount <= 0) all.push(current);
@@ -57,16 +72,13 @@ export default class OrderBooksStore {
       }
       return all;
     }, []);
-    if (remainingPriceSlot.length > 0){
-      // console.log('updatubg', order.price, remainingPriceSlot);
-      this.book.set(priceSlot[0].price, remainingPriceSlot);
-      // console.log(this.book);;
-      
+    const orderbook = this.ordeerbookDB(order.orderType);
+    if (remainingPriceSlot.length > 0) {
+      orderbook.set(priceSlot[0].price, remainingPriceSlot);
+
     }
-    else{
-      // console.log('deleting', order.price);
-      this.book.delete(priceSlot[0].price);
-      // console.log(this.book);
+    else {
+      orderbook.delete(priceSlot[0].price);
 
     }
     return order;
@@ -76,33 +88,33 @@ export default class OrderBooksStore {
     const orderSlotItr = orderBookEntries.next();
     const orderSlot = orderSlotItr.value;
     if (orderSlotItr.done || order.amount <= 0) {
-      return;
+      // console.log('done!!', order);
+
+      return order;
     } else {
-      const [slotPrice, slot] = orderSlot[1];
+      const [slotPrice, slot] = orderSlot;
+      // console.log('consuming!!',orderSlot);
       if ((order.orderType === OrderTypes.BUY && slotPrice <= order.price) || order.orderType === OrderTypes.SELL && slotPrice >= order.price) {
-        const orderRemaining = this.consumePriceSlot(order, slot);
-        console.log('orderRemaining', orderRemaining);
         
+        const orderRemaining = this.consumePriceSlot(order, slot);
         if (orderRemaining.amount > 0) {
+
           this.iterateOverBookOrders(orderRemaining, orderBookEntries);
         }
-      } else this.iterateOverBookOrders(order, orderBookEntries);
+      } else {
+        // console.log('!!order', order);
+        // console.log('!!slotPrice', slotPrice);
+
+        this.iterateOverBookOrders(order, orderBookEntries);
+      }
     }
+    return order;
   }
   consumeOrder(order: Order) {
-    const orderBookEntries = this.getBook().entries();
-    this.iterateOverBookOrders(order, orderBookEntries);
-    return;
-    if (this.isPriceExisting(order.price)) {
-      const priceSlot = this.book.get(order.price);
-      const newSlot = this.consumePriceSlot(order, priceSlot)
-      console.log('!!newSlot', newSlot);
-    } else {
-      const orderBookEntries = this.getBook().entries();
-      this.iterateOverBookOrders(order, orderBookEntries);
-    }
-  }
-  updatePriceSlotsOrder(): void {
-    this.sortedPriceSlots = Array.from(this.book.keys()).sort();
+    const consumableOrderType = order.orderType === OrderTypes.BUY ? OrderTypes.SELL : OrderTypes.BUY;
+    const orderBookEntries = this.ordeerbookDB(consumableOrderType).entries();
+    const orderLeftOver = this.iterateOverBookOrders(order, orderBookEntries);
+    // console.log('orderLeftOver:', orderLeftOver);
+    // return orderLeftOver;
   }
 }
