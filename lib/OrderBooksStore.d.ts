@@ -23,14 +23,35 @@ export default class OrderBook {
      */
     addNewOrder(order: Order): void;
     /**
-     * retrieve seconderu
-     * @param {Order} order
-     * @returns {void}
+     * retrieve secondery order reference.
+     * @param {OrderTypes} orderType order type.
+     * @returns {Book} returns the buy orderbook if orderType is SELL, and the sell orderbook if order type is BUY.
      */
     secondaryOrderbookDB(orderType: OrderTypes): Book;
+    /**
+     * retrieve the orderbook of the same order type.
+     * @param {OrderTypes} orderType order type.
+     * @returns {Book} returns the buy orderbook if orderType is BUY, and the sell orderbook if order type is SELL.
+     */
     ordeerbookDB(orderType: OrderTypes): Book;
+    /**
+     * add new order to price slot.
+     * @param {Order} order the new order.
+     * @returns {void}
+     */
     addOrderToExistingPriceSlot(order: Order): void;
+    /**
+     * check if price slot existing in the orderbook.
+     * @param {Order} order the new order.
+     * @returns {boolean} return wither price slot existing or not.
+     */
     isPriceSlotExisting(order: Order): boolean;
+    /**
+     * handle order subtraction from an existing price slot accumulatively.
+     * @param {Order} order the new order.
+     * @param {Order[]} priceSlot the targeted price slot.
+     * @returns {Order} return the order with the remaining amount after processing.
+     */
     consumePriceSlot(order: Order, priceSlot: Order[]): Order;
     iterateOverBookOrders(order: Order, orderBookEntries: any): Order;
     consumeOrder(order: Order): void;

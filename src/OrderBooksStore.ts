@@ -38,20 +38,32 @@ export default class OrderBook {
   }
 
   /**
-   * retrieve seconderu 
-   * @param {Order} order
-   * @returns {void}
+   * retrieve secondery order reference.
+   * @param {OrderTypes} orderType order type.
+   * @returns {Book} returns the buy orderbook if orderType is SELL, and the sell orderbook if order type is BUY.
    */
   secondaryOrderbookDB(orderType: OrderTypes): Book {
     if (orderType === OrderTypes.BUY)
       return this.sellbook;
     return this.buybook;
   }
+
+  /**
+   * retrieve the orderbook of the same order type.
+   * @param {OrderTypes} orderType order type.
+   * @returns {Book} returns the buy orderbook if orderType is BUY, and the sell orderbook if order type is SELL.
+   */
   ordeerbookDB(orderType: OrderTypes): Book {
     if (orderType === OrderTypes.BUY)
       return this.buybook;
     return this.sellbook;
   }
+
+  /**
+   * add new order to price slot.
+   * @param {Order} order the new order.
+   * @returns {void}
+   */
   addOrderToExistingPriceSlot(order: Order) {
     const orderBook = this.ordeerbookDB(order.orderType);
     const priceSlot = orderBook.get(order.price);
@@ -60,11 +72,24 @@ export default class OrderBook {
       orderBook.set(order.price, priceSlot);
     }
   }
+
+  /**
+   * check if price slot existing in the orderbook.
+   * @param {Order} order the new order.
+   * @returns {boolean} return wither price slot existing or not.
+   */
   isPriceSlotExisting(order: Order): boolean {
     return this.ordeerbookDB(order.orderType).has(order.price);
   }
-  consumePriceSlot(order: Order, priceSlot: Order[]) {
 
+
+  /**
+   * handle order subtraction from an existing price slot accumulatively.
+   * @param {Order} order the new order.
+   * @param {Order[]} priceSlot the targeted price slot.
+   * @returns {Order} return the order with the remaining amount after processing.
+   */
+  consumePriceSlot(order: Order, priceSlot: Order[]): Order {
     const remainingPriceSlot = priceSlot?.reduce((all: Order[], current: Order) => {
       //order fullfilled
       if (order.amount <= 0) all.push(current);
@@ -79,19 +104,13 @@ export default class OrderBook {
       }
       return all;
     }, []);
-    // console.log('!!!!!!', remainingPriceSlot);
     const orderbook = this.secondaryOrderbookDB(order.orderType);
     if (remainingPriceSlot.length > 0) {
       orderbook.set(priceSlot[0].price, remainingPriceSlot);
     }
     else {
-      // console.log('deleting', priceSlot[0].price, this.buybook);
-
       orderbook.delete(priceSlot[0].price);
-      // console.log('deleting', priceSlot[0].price, this.buybook);
-
     }
-    console.log('order:', order);
     return order;
   }
   iterateOverBookOrders(order: Order, orderBookEntries) {
