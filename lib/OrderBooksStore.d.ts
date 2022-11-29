@@ -2,24 +2,32 @@ import { Order, OrderTypes } from './Order';
 declare type Book = Map<number, Order[]>;
 /**
  * Store for multi-symbol orderbooks, grouped into one book (OrderBook) per symbol
- * @class OrderBooksStore
+ * @class OrderBook
  */
-export default class OrderBooksStore {
-    book: Book;
+export default class OrderBook {
     sellbook: Book;
     buybook: Book;
     orderbookType: OrderTypes;
     constructor(orderbookType: OrderTypes);
     /**
-     * @param {string} symbol
-     * @returns {OrderBook} created for symbol if not already tracked
+     * @returns {buyOrderBook, sellOrderBook} return latest snapshot of the orderbook
      */
     getBook(): {
         buyOrderBook: [number, Order[]][];
         sellOrderBook: [number, Order[]][];
     };
+    /**
+     * add new price slot if doesn't exist
+     * @param {Order} order
+     * @returns {void}
+     */
     addNewOrder(order: Order): void;
-    addNewOrderSlot(order: Order): void;
+    /**
+     * retrieve seconderu
+     * @param {Order} order
+     * @returns {void}
+     */
+    secondaryOrderbookDB(orderType: OrderTypes): Book;
     ordeerbookDB(orderType: OrderTypes): Book;
     addOrderToExistingPriceSlot(order: Order): void;
     isPriceSlotExisting(order: Order): boolean;
