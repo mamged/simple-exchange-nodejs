@@ -113,33 +113,39 @@ export default class OrderBook {
     }
     return order;
   }
-  iterateOverBookOrders(order: Order, orderBookEntries) {
+
+  /**
+   * handle order subtraction from an existing price slot accumulatively.
+   * @param {Order} order the new order.
+   * @param {IterableIterator} orderBookEntries the orderbook map enteries.
+   * @returns {Order} return the order with the remaining amount after processing.
+   */
+  iterateOverBookOrders(order: Order, orderBookEntries): Order{
 
     const orderSlotItr = orderBookEntries.next();
     const orderSlot = orderSlotItr.value;
     if (orderSlotItr.done || order.amount <= 0) {
-      // console.log('done!!', order);
-
       return order;
     } else {
       const [slotPrice, slot] = orderSlot;
       if ((order.orderType === OrderTypes.BUY && slotPrice <= order.price) || order.orderType === OrderTypes.SELL && slotPrice >= order.price) {
-        // console.log('consuming!!',orderSlot);
-
         const orderRemaining = this.consumePriceSlot(order, slot);
         if (orderRemaining.amount > 0) {
 
           this.iterateOverBookOrders(orderRemaining, orderBookEntries);
         }
       } else {
-        // console.log('!!order', order);
-        // console.log('!!slotPrice', slotPrice);
-
         this.iterateOverBookOrders(order, orderBookEntries);
       }
     }
     return order;
   }
+
+  /**
+   * handle new orders.
+   * @param {Order} order the new order.
+   * @returns {void}
+   */
   consumeOrder(order: Order) {
     const consumableOrderType = order.orderType === OrderTypes.BUY ? OrderTypes.SELL : OrderTypes.BUY;
     const orderBookEntries = this.ordeerbookDB(consumableOrderType).entries();

@@ -53,7 +53,18 @@ export default class OrderBook {
      * @returns {Order} return the order with the remaining amount after processing.
      */
     consumePriceSlot(order: Order, priceSlot: Order[]): Order;
+    /**
+     * handle order subtraction from an existing price slot accumulatively.
+     * @param {Order} order the new order.
+     * @param {IterableIterator} orderBookEntries the orderbook map enteries.
+     * @returns {Order} return the order with the remaining amount after processing.
+     */
     iterateOverBookOrders(order: Order, orderBookEntries: any): Order;
+    /**
+     * handle new orders.
+     * @param {Order} order the new order.
+     * @returns {void}
+     */
     consumeOrder(order: Order): void;
 }
 export {};
