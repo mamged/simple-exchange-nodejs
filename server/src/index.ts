@@ -34,4 +34,4 @@ service.on('request', (rid, key, payload, handler) => {
   orderbook.consumeOrder(payload);
   handler.reply(null, orderbook.getBook());
 });
-console.log('server started...');
+console.log('server started..');

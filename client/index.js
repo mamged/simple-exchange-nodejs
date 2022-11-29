@@ -23,5 +23,5 @@ peer.request('rpc_test', order, { timeout: 10000 }, (err, data) => {
         console.error(err)
         process.exit(-1)
     }
-    console.log('client received back:', data) // { msg: 'world' }
+    console.log('client received back:', JSON.stringify(data, null, 2)) // { msg: 'world' }
 })

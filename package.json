@@ -9,7 +9,7 @@
         "index.js"
     ],
     "scripts": {
-        "serve-orderbook": "concurrently \"tsc -p server/tsconfig.json\" \"nodemon ./server/lib/index.js\"",
+        "serve-orderbook": "concurrently \"tsc -p server/tsconfig.json\" \"nodemon --watch server ./server/lib/index.js\"",
         "serve-client": "node client",
         "test": "echo \"Error: no test specified\" && exit 1",
         "clean": "rimraf lib dist",
