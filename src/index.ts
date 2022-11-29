@@ -1,5 +1,5 @@
 import { OrderTypes } from "./Order";
-import OrderBook from "./OrderBooks";
+import OrderBook from "./OrderBook";
 const orderbook = new OrderBook(OrderTypes.SELL);
 // orderbook.addNewOrder({
 //  orderType: OrderTypes.SELL,
@@ -46,8 +46,7 @@ orderbook.addNewOrder({
 });
 console.log(JSON.stringify(orderbook.getBook()));
 console.log();
-console.log('SELL', {amount: 6,
-price: 100,});
+console.log('SELL', {amount: 6, price: 100,});
 
 orderbook.consumeOrder({
  orderType: OrderTypes.SELL,

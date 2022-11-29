@@ -2,8 +2,8 @@ import { Order, OrderTypes } from './Order';
 
 type Book = Map<number, Order[]>;
 /**
- * Store for multi-symbol orderbooks, grouped into one book (OrderBook) per symbol
- * @class OrderBook
+ * an orderbook store to handle buy and sell orders.
+ * @class OrderBook.
  */
 export default class OrderBook {
   sellbook: Book;
@@ -16,7 +16,7 @@ export default class OrderBook {
   }
 
   /**
-   * @returns {buyOrderBook, sellOrderBook} return latest snapshot of the orderbook
+   * @returns {buyOrderBook, sellOrderBook} return latest snapshot of the orderbook.
    */
   getBook(): { buyOrderBook: [number, Order[]][], sellOrderBook: [number, Order[]][] } {
     return {
