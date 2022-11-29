@@ -1,9 +1,9 @@
-enum OrderTypes {
+export enum OrderTypes {
  BUY,
  SELL,
  CANCELL
 }
-interface Order {
+export interface Order {
  id: string,
  orderType: OrderTypes,
  symbol: string,
