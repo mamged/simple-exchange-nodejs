@@ -6,8 +6,10 @@ const Order_1 = require("./Order");
  * @class OrderBook.
  */
 class OrderBook {
-    constructor(orderbookType) {
-        this.orderbookType = orderbookType;
+    /**
+     * Create an orderbook.
+     */
+    constructor() {
         this.buybook = new Map();
         this.sellbook = new Map();
     }
@@ -139,7 +141,6 @@ class OrderBook {
         const consumableOrderType = order.orderType === Order_1.OrderTypes.BUY ? Order_1.OrderTypes.SELL : Order_1.OrderTypes.BUY;
         const orderBookEntries = this.ordeerbookDB(consumableOrderType).entries();
         const orderLeftOver = this.iterateOverBookOrders(order, orderBookEntries);
-        console.log('orderLeftOver:', orderLeftOver);
         if (orderLeftOver.amount > 0)
             this.addNewOrder(order);
     }

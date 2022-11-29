@@ -9,7 +9,8 @@
         "index.js"
     ],
     "scripts": {
-        "serve-orderbook": "concurrently --kill-others \"tsc -w\" \"nodemon --watch ./lib ./lib/index.js\"",
+        "serve-orderbook": "concurrently \"tsc -p server/tsconfig.json\" \"nodemon ./server/lib/index.js\"",
+        "serve-client": "node client",
         "test": "echo \"Error: no test specified\" && exit 1",
         "clean": "rimraf lib dist",
         "build": "tsc",
@@ -53,5 +54,9 @@
     "bugs": {
         "url": "https://github.com/mAmged/simple-exchange-nodejs/issues"
     },
-    "homepage": "https://github.com/mAmged/simple-exchange-nodejs#readme"
+    "homepage": "https://github.com/mAmged/simple-exchange-nodejs#readme",
+    "dependencies": {
+        "grenache-nodejs-http": "^0.7.12",
+        "grenache-nodejs-link": "^0.7.12"
+    }
 }

@@ -8,9 +8,11 @@ type Book = Map<number, Order[]>;
 export default class OrderBook {
   sellbook: Book;
   buybook: Book;
-  orderbookType: OrderTypes;
-  constructor(orderbookType: OrderTypes) {
-    this.orderbookType = orderbookType;
+
+  /**
+   * Create an orderbook.
+   */
+  constructor() {
     this.buybook = new Map();
     this.sellbook = new Map();
   }
@@ -149,7 +151,6 @@ export default class OrderBook {
     const consumableOrderType = order.orderType === OrderTypes.BUY ? OrderTypes.SELL : OrderTypes.BUY;
     const orderBookEntries = this.ordeerbookDB(consumableOrderType).entries();
     const orderLeftOver = this.iterateOverBookOrders(order, orderBookEntries);
-    console.log('orderLeftOver:', orderLeftOver);
     if (orderLeftOver.amount > 0)
       this.addNewOrder(order);
   }

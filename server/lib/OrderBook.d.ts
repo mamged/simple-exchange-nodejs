@@ -7,8 +7,10 @@ declare type Book = Map<number, Order[]>;
 export default class OrderBook {
     sellbook: Book;
     buybook: Book;
-    orderbookType: OrderTypes;
-    constructor(orderbookType: OrderTypes);
+    /**
+     * Create an orderbook.
+     */
+    constructor();
     /**
      * @returns {buyOrderBook, sellOrderBook} return latest snapshot of the orderbook.
      */
