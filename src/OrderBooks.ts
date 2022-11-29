@@ -91,8 +91,7 @@ export default class OrderBook {
    */
   consumePriceSlot(order: Order, priceSlot: Order[]): Order {
     const remainingPriceSlot = priceSlot?.reduce((all: Order[], current: Order) => {
-      //order fullfilled
-      if (order.amount <= 0) all.push(current);
+      if (order.amount <= 0) all.push(current); //order fullfilled
       else {
         if (order.amount > current.amount) {
           order.amount = order.amount - current.amount;
@@ -120,7 +119,7 @@ export default class OrderBook {
    * @param {IterableIterator} orderBookEntries the orderbook map enteries.
    * @returns {Order} return the order with the remaining amount after processing.
    */
-  iterateOverBookOrders(order: Order, orderBookEntries): Order{
+  iterateOverBookOrders(order: Order, orderBookEntries): Order {
 
     const orderSlotItr = orderBookEntries.next();
     const orderSlot = orderSlotItr.value;

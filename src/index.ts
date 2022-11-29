@@ -1,5 +1,5 @@
 import { OrderTypes } from "./Order";
-import OrderBook from "./OrderBooksStore";
+import OrderBook from "./OrderBooks";
 const orderbook = new OrderBook(OrderTypes.SELL);
 // orderbook.addNewOrder({
 //  orderType: OrderTypes.SELL,
