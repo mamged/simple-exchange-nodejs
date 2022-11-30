@@ -3,8 +3,10 @@
 
 ### Usage
 ```npm i```
+
 run server
 ```node server/server.js```
+
 run client
 ```node client/client.js```
 
